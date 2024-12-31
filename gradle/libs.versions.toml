@@ -1,11 +1,11 @@
 [versions]
 # Plugins
 agp = "8.5.2"
-kotlin = "1.9.22"
-ksp = "1.8.10-1.0.9"
+kotlin = "2.0.21"
+kotlinxSerializationJson = "1.7.3"
+ksp = "2.0.21-1.0.25"
 navigation = "2.8.5"
 hilt = "2.50"
-ktlintPlugin = "11.5.1" # Example version for org.jlleitschuh.gradle.ktlint
 
 # Android / Compose / Testing / Etc.
 coreKtx = "1.15.0"
@@ -13,6 +13,8 @@ appcompat = "1.7.0"
 material = "1.12.0"
 constraintLayout = "2.2.0"
 camera = "1.4.1"
+googleAccompanist = "0.34.0"
+coil = "2.5.0"
 
 # ML Kit
 mlKit = "16.1.7"
@@ -24,7 +26,7 @@ junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 mockito = "5.7.0"
 mockitoKotlin = "4.0.0"
-coroutinesTest = "1.8.0"
+coroutinesTest = "1.9.0"
 
 # Lifecycle & Coroutines
 lifecycleRuntimeKtx = "2.8.7"
@@ -48,18 +50,24 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+ksp = {id = "com.google.devtools.ksp", version.ref = "ksp"}
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+
 
 [libraries]
 # Core
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintLayout" }
 
 # Compose
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+
+
 androidx-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
@@ -93,6 +101,16 @@ androidx-camera-core = { group = "androidx.camera", name = "camera-core", versio
 androidx-camera-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "camera" }
 androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "camera" }
 androidx-camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "camera" }
+
+
+# Accompanist
+google-accompanist = {group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "googleAccompanist"}
+
+
+# Coil
+coil = {group = "io.coil-kt", name ="coil", version.ref = "coil"}
+coil-kt = {group = "io.coil-kt", name = "coil-compose", version.ref = "coil"}
+
 
 # ML Kit
 mlkit-face-detection = { group = "com.google.mlkit", name = "face-detection", version.ref = "mlKit" }

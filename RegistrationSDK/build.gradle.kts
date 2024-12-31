@@ -1,9 +1,11 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.ksp)
 
     alias(libs.plugins.dagger.hilt)
-    id("kotlin-kapt")
+    alias(libs.plugins.serialization)
+    alias(libs.plugins.compose.compiler)
 
 
 }
@@ -29,7 +31,6 @@ android {
         }
     }
     compileOptions {
-        // Use Java 17 for the project
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
@@ -38,12 +39,12 @@ android {
         jvmTarget = JavaVersion.VERSION_17.toString()
     }
     buildFeatures {
-        compose = true // Enable Jetpack Compose
-        buildConfig = true // Enable build configuration support
+        compose = true
+        buildConfig = true
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.8"
+        kotlinCompilerExtensionVersion = "1.5.15"
     }
     packaging {
         resources {
@@ -55,12 +56,11 @@ android {
 }
 
 dependencies {
-
     // Core
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-    implementation(libs.androidx.constraintlayout) // optional if you want constraint layouts
+    implementation(libs.androidx.constraintlayout)
 
     // Compose
     implementation(platform(libs.androidx.compose.bom))
@@ -80,16 +80,14 @@ dependencies {
 
     // Hilt
     implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
-    // or if using KSP:
-    // ksp(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
 
-    // Room
+    //Room
     implementation(libs.room.runtime)
+    annotationProcessor(libs.room.compiler)
     implementation(libs.room.ktx)
-    kapt(libs.room.compiler)
-    // or if using KSP:
-    // ksp(libs.room.compiler)
+    ksp(libs.room.compiler)
+    testImplementation(libs.room.testing)
 
     // CameraX
     implementation(libs.androidx.camera.core)
@@ -101,7 +99,15 @@ dependencies {
     implementation(libs.mlkit.face.detection)
     implementation(libs.mlkit.play.services.face.detection)
 
+    // Serialization
+    implementation(libs.kotlinx.serialization.json)
 
+    // Accompanist
+    implementation(libs.google.accompanist)
+
+    // Coil
+    implementation(libs.coil)
+    implementation(libs.coil.kt)
 
     // Testing
     testImplementation(libs.junit)
