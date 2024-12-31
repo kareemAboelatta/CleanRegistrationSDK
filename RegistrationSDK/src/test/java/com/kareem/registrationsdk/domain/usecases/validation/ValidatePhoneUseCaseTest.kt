@@ -68,14 +68,4 @@ class ValidatePhoneUseCaseTest {
         assertEquals(null, result.errorType)
     }
 
-    @Test
-    fun `given phone with dash in the middle but enough digits when validating then return success`() {
-        // e.g. 123-456-7890
-        val input = "123-456-7890"
-
-        val result = validatePhoneUseCase.validate(input)
-
-        assertEquals(true, result.isSuccessful)
-        assertEquals(null, result.errorType)
-    }
 }

@@ -8,11 +8,24 @@ import javax.inject.Inject
 class ValidateUsernameUseCase @Inject constructor() : BaseValidationUseCase<String>() {
 
     override fun validate(input: String): ValidationResult {
-        // TODO: Implement username validation logic
-        // Placeholder
-        return ValidationResult(
-            isSuccessful = false,
-            errorType = ValidationErrorType.FieldEmpty
-        )
+        // 1) Check if empty
+        if (input.isBlank()) {
+            return ValidationResult(
+                isSuccessful = false,
+                errorType = ValidationErrorType.FieldEmpty
+            )
+        }
+
+        // 2) Ensure no digits
+        val containsDigit = input.any { it.isDigit() }
+        if (containsDigit) {
+            return ValidationResult(
+                isSuccessful = false,
+                errorType = ValidationErrorType.InvalidFormat
+            )
+        }
+
+        // 3) Success
+        return ValidationResult(isSuccessful = true)
     }
 }
