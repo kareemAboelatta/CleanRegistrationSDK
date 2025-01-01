@@ -11,7 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.kareem.registrationsdk.presentation.launcher.RegistrationSDKLauncher
+import com.kareem.registrationsdk.presentation.core.launcher.RegistrationSDKLauncher
 import com.kareem.tasky.ui.theme.TaskyTheme
 import dagger.hilt.android.AndroidEntryPoint
 

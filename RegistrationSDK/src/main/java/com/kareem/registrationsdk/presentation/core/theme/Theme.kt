@@ -1,4 +1,4 @@
-package com.kareem.registrationsdk.presentation.theme
+package com.kareem.registrationsdk.presentation.core.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -33,7 +33,7 @@ private val LightColorScheme = lightColorScheme(
 )
 
 @Composable
-fun TaskyTheme(
+fun RegistrationSDKTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,

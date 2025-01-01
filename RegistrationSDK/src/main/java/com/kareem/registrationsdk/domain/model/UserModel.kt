@@ -6,5 +6,5 @@ data class UserModel(
     val phone: String,
     val email: String,
     val password: String,
-    val userImage: String?
+    val userImage: String? = null
 )

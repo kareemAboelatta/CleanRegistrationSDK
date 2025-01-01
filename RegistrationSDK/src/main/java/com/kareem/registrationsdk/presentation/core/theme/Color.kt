@@ -1,4 +1,4 @@
-package com.kareem.registrationsdk.presentation.theme
+package com.kareem.registrationsdk.presentation.core.theme
 
 import androidx.compose.ui.graphics.Color
 
