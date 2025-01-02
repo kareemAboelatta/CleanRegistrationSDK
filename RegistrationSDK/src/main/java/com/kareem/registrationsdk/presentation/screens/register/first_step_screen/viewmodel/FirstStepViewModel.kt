@@ -2,6 +2,7 @@ package com.kareem.registrationsdk.presentation.screens.register.first_step_scre
 
 import com.kareem.registrationsdk.domain.model.UserModel
 import com.kareem.registrationsdk.domain.usecase.validation.ValidateEmailUseCase
+import com.kareem.registrationsdk.domain.usecase.validation.ValidatePasswordUseCase
 import com.kareem.registrationsdk.domain.usecase.validation.ValidatePhoneUseCase
 import com.kareem.registrationsdk.domain.usecase.validation.ValidateUsernameUseCase
 import com.kareem.registrationsdk.presentation.core.base.BaseViewModel
@@ -18,7 +19,7 @@ class FirstStepViewModel @Inject constructor(
     private val validateNameUseCase: ValidateUsernameUseCase,
     private val validatePhoneUseCase: ValidatePhoneUseCase,
     private val validateEmailUseCase: ValidateEmailUseCase,
-    private val validatePasswordUseCase: ValidateUsernameUseCase
+    private val validatePasswordUseCase: ValidatePasswordUseCase
 
 ) : BaseViewModel<FirstStepState, FirstStepEvent>(FirstStepState(), FirstStepEvent.Idle) {
 
@@ -106,6 +107,17 @@ class FirstStepViewModel @Inject constructor(
                 passwordError = null,
             )
 
+            setEffect {
+                FirstStepUiEffect.NavigateToSecondScreenToPickPhoto(
+                    userModel = UserModel(
+                        username = state.name,
+                        phone = state.phone,
+                        email = state.email,
+                        password = state.password,
+                        userImage = null
+                    )
+                )
+            }
         }
     }
 }

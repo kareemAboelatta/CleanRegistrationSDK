@@ -13,5 +13,5 @@ fun SecondStepScreen(
     sharedRegistrationViewModel: SharedRegistrationViewModel = navController.sharedViewModel()
 ) {
 
-    Text(text = "Second Step Screen")
+    Text(text = "Second Step Screen user : \n ${sharedRegistrationViewModel.state.userModel}")
 }
