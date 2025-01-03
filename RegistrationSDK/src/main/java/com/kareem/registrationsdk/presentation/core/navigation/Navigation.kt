@@ -1,12 +1,8 @@
 package com.kareem.registrationsdk.presentation.core.navigation
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
@@ -17,7 +13,10 @@ import com.kareem.registrationsdk.presentation.screens.user_list.UsersListScreen
 
 
 @Composable
-fun Navigation() {
+fun Navigation(
+    activity: ComponentActivity, // or pass a callback if you prefer
+
+) {
     val navController = rememberNavController()
 
     CompositionLocalProvider(
@@ -37,7 +36,7 @@ fun Navigation() {
                 }
 
                 composable<Screens.RegistrationNavigation.SecondStepScreen> {
-                    SecondStepScreen()
+                    SecondStepScreen(activity)
                 }
             }
 

@@ -40,6 +40,7 @@ hiltNavigationComposeVersion = "1.2.0"
 
 # Room
 room = "2.6.1"
+cameraMlkitVision = "1.4.1"
 
 
 
@@ -128,3 +129,4 @@ truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
 mockito-inline = { group = "org.mockito", name = "mockito-inline", version.ref = "mockitoInline" }
 mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockitoKotlin" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutinesTest" }
+androidx-camera-mlkit-vision = { group = "androidx.camera", name = "camera-mlkit-vision", version.ref = "cameraMlkitVision" }

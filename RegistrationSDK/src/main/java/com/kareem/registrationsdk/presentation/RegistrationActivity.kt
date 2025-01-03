@@ -26,7 +26,7 @@ class RegistrationActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             RegistrationSDKTheme {
-                Navigation()
+                Navigation(this)
             }
         }
 
