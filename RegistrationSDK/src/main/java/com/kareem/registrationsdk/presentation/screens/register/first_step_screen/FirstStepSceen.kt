@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -139,7 +140,6 @@ fun FirstStepScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Submit Button
             Button(
                 onClick = {
                     viewModel.onEvent(FirstStepEvent.Submit)
@@ -147,6 +147,18 @@ fun FirstStepScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(text = "Go to Second Step")
+            }
+
+            Button(
+                onClick = {
+                    navController.navigate(Screens.UsersListScreen)
+                },
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.secondary
+                )
+            ) {
+                Text(text = "Registered users")
             }
         }
     }
