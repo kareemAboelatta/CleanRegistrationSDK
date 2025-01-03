@@ -6,4 +6,5 @@ sealed class SharedRegistrationEvent {
     data object SaveUserData : SharedRegistrationEvent()
     data object Idle : SharedRegistrationEvent()
     data class OnUserModelChanged(val userModel: UserModel) : SharedRegistrationEvent()
+    data class OnImageChangedChanged(val image: String) : SharedRegistrationEvent()
 }

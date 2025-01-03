@@ -98,6 +98,8 @@ dependencies {
     // ML Kit
     implementation(libs.mlkit.face.detection)
     implementation(libs.mlkit.play.services.face.detection)
+    implementation(libs.androidx.camera.mlkit.vision)
+
 
     // Serialization
     implementation(libs.kotlinx.serialization.json)

@@ -14,6 +14,8 @@ object Screens {
 
     }
 
+    @Serializable
+    data object RegistrationSuccessDialog
 
     @Serializable
     data object UsersListScreen
