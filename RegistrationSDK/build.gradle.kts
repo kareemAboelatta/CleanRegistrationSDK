@@ -12,7 +12,7 @@ plugins {
 
 android {
     namespace = "com.kareem.registrationsdk"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 27
@@ -115,6 +115,13 @@ dependencies {
     testImplementation(libs.mockito.inline)
     testImplementation(libs.mockito.kotlin)
     testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.truth)
+
+
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.truth)
+
+    androidTestApi(libs.androidx.ui.test.junit4)
+
 }

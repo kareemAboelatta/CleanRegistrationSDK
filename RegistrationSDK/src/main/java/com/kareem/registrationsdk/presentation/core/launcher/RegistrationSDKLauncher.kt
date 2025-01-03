@@ -1,4 +1,4 @@
-package com.kareem.registrationsdk.presentation.launcher
+package com.kareem.registrationsdk.presentation.core.launcher
 
 import android.content.Context
 import android.content.Intent

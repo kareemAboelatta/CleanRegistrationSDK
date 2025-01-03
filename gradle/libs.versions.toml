@@ -26,8 +26,9 @@ junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 mockito = "5.7.0"
 mockitoKotlin = "4.0.0"
+mockitoInline = "5.2.0"
 coroutinesTest = "1.9.0"
-
+truth = "1.4.4"
 # Lifecycle & Coroutines
 lifecycleRuntimeKtx = "2.8.7"
 coroutines = "1.9.0"
@@ -39,6 +40,7 @@ hiltNavigationComposeVersion = "1.2.0"
 
 # Room
 room = "2.6.1"
+
 
 
 
@@ -121,6 +123,8 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
-mockito-inline = { group = "org.mockito", name = "mockito-inline", version = "5.7.0" }
+#com.google.truth:truth
+truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
+mockito-inline = { group = "org.mockito", name = "mockito-inline", version.ref = "mockitoInline" }
 mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockitoKotlin" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutinesTest" }
