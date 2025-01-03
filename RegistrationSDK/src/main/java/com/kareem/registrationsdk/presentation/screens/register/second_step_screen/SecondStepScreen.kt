@@ -3,6 +3,7 @@ package com.kareem.registrationsdk.presentation.screens.register.second_step_scr
 import android.Manifest
 import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -36,10 +37,12 @@ import com.kareem.registrationsdk.detection.FaceWorkflow
 import com.kareem.registrationsdk.detection.tasks.DetectionStep
 import com.kareem.registrationsdk.detection.tasks.SmileDetectionStep
 import com.kareem.registrationsdk.presentation.core.navigation.LocalNavController
+import com.kareem.registrationsdk.presentation.core.navigation.Screens
 import com.kareem.registrationsdk.presentation.core.navigation.sharedViewModel
 import com.kareem.registrationsdk.presentation.screens.register.second_step_screen.viewmodel.SecondStepEvent
 import com.kareem.registrationsdk.presentation.screens.register.second_step_screen.viewmodel.SecondStepUiEffect
 import com.kareem.registrationsdk.presentation.screens.register.second_step_screen.viewmodel.SecondStepViewModel
+import com.kareem.registrationsdk.presentation.screens.register.shared_viewmodel.RegistrationUiEffect
 import com.kareem.registrationsdk.presentation.screens.register.shared_viewmodel.SharedRegistrationEvent
 import com.kareem.registrationsdk.presentation.screens.register.shared_viewmodel.SharedRegistrationViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -56,7 +59,6 @@ import java.io.File
  */
 @Composable
 fun SecondStepScreen(
-    activity: ComponentActivity,
     navController: NavController = LocalNavController.current,
     viewModel: SecondStepViewModel = hiltViewModel(),
     sharedRegistrationViewModel: SharedRegistrationViewModel = navController.sharedViewModel()
@@ -67,6 +69,12 @@ fun SecondStepScreen(
     // Camera controller + preview
     val cameraController = remember { LifecycleCameraController(context) }
     val previewView = remember { PreviewView(context) }
+
+    // This function can unbind or stop the camera
+    fun stopCamera() {
+        cameraController.unbind()
+        previewView.controller = null
+    }
 
     // Bind camera lifecycle
     LaunchedEffect(Unit) {
@@ -109,14 +117,28 @@ fun SecondStepScreen(
                         SharedRegistrationEvent.OnImageChangedChanged(effect.photoPath)
                     )
                     sharedRegistrationViewModel.onEvent(SharedRegistrationEvent.SaveUserData)
-                    // Example: finish the screen or move to next step
-                    // activity.finish()
-
 
                 }
             }
         }
     }
+
+    // Collect side effects (UI events) from shared view model
+    LaunchedEffect(Unit) {
+        sharedRegistrationViewModel.effectFlow.collectLatest { effect ->
+            when (effect) {
+                is RegistrationUiEffect.ShowError -> {
+                    Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
+                }
+
+                RegistrationUiEffect.UserDataSaved -> {
+                    stopCamera()
+                    navController.navigate(Screens.RegistrationSuccessDialog)
+                }
+            }
+        }
+    }
+
 
     // UI Layout
     Surface(modifier = Modifier.fillMaxSize()) {

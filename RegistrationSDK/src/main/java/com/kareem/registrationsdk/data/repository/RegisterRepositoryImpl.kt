@@ -13,9 +13,9 @@ class RegisterRepositoryImpl @Inject constructor(
     private val userDao: UserDao
 ) : RegisterRepository {
 
-    override suspend fun insertUser(user: UserModel) {
+    override suspend fun insertUser(user: UserModel) =
         userDao.insertUser(user.toUserEntity())
-    }
+
 
     override suspend fun deleteUser(user: UserModel) {
         userDao.deleteUser(user.toUserEntity())

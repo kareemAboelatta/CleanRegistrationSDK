@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface RegisterRepository {
 
-    suspend fun insertUser(user: UserModel)
+    suspend fun insertUser(user: UserModel): Long
 
     suspend fun deleteUser(user: UserModel)
 

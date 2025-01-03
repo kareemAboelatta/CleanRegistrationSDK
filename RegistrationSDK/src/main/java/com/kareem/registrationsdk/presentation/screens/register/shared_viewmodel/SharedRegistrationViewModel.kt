@@ -2,15 +2,12 @@ package com.kareem.registrationsdk.presentation.screens.register.shared_viewmode
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.kareem.registrationsdk.domain.repository.RegisterRepository
 import com.kareem.registrationsdk.domain.usecase.RegisterUseCase
 import com.kareem.registrationsdk.presentation.core.base.BaseViewModel
 import com.kareem.registrationsdk.presentation.core.base.UiEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -36,15 +33,14 @@ sealed class RegistrationUiEffect : UiEffect() {
 }
 
 
+
 @HiltViewModel
 class SharedRegistrationViewModel @Inject constructor(
-    private val registerRepository: RegisterRepository
-) :
-    BaseViewModel<SharedRegistrationState, SharedRegistrationEvent>(
-        SharedRegistrationState(),
-        SharedRegistrationEvent.Idle
-    ) {
-
+    private val registerUseCase: RegisterUseCase
+) : BaseViewModel<SharedRegistrationState, SharedRegistrationEvent>(
+    SharedRegistrationState(),
+    SharedRegistrationEvent.Idle
+) {
 
     override fun onEvent(event: SharedRegistrationEvent) {
         when (event) {
@@ -52,31 +48,43 @@ class SharedRegistrationViewModel @Inject constructor(
             is SharedRegistrationEvent.OnUserModelChanged -> {
                 state = state.copy(userModel = event.userModel)
             }
-
-            SharedRegistrationEvent.SaveUserData -> {
-                saveUserData()
-            }
-
             is SharedRegistrationEvent.OnImageChangedChanged -> {
                 state = state.copy(
                     userModel = state.userModel?.copy(userImage = event.image)
                 )
             }
+            SharedRegistrationEvent.SaveUserData -> {
+                saveUserData()
+            }
         }
     }
 
     private val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        Log.d("TAG", "SharedRegistrationViewModel:  $throwable");
-        setEffect { RegistrationUiEffect.ShowError(throwable.message.toString()) }
+        Log.e("SharedRegViewModel", "Error saving user data: ", throwable)
+        setEffect { RegistrationUiEffect.ShowError("Error saving user data:" + throwable.message.orEmpty()) }
     }
 
     private fun saveUserData() {
-        val customCoroutineContext = Dispatchers.IO + coroutineExceptionHandler + NonCancellable
-        CoroutineScope(
-            customCoroutineContext
-        ).launch {
-//            state.userModel?.let { registerRepository.insertUser(it) }
-            Log.d("TAG", "SharedRegistrationViewModel: saveUserData: ${state.userModel}");
+        // Since you want to do DB operations, you can use viewModelScope with Dispatchers.IO
+        viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
+            val user = state.userModel
+            if (user == null) {
+                Log.e("SharedRegViewModel", "No user data to save.")
+                return@launch
+            }
+
+            val rowId = registerUseCase(user)
+
+            if (rowId > 0) {
+                // insertion successful
+                Log.d("SharedRegViewModel", "User inserted with id = $rowId")
+                setEffect { RegistrationUiEffect.UserDataSaved }
+                // you can also emit a UI effect or navigate
+            } else {
+                // insertion failed or replaced an existing row with the same ID
+                setEffect { RegistrationUiEffect.ShowError("User insertion failed or replaced, rowId = $rowId") }
+
+            }
         }
     }
 }

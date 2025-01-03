@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 interface UserDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertUser(user: UserEntity)
+    suspend fun insertUser(user: UserEntity): Long  // return type changed to Long
 
     @Delete
     suspend fun deleteUser(user: UserEntity)
