@@ -8,9 +8,12 @@ A **two-step** Android registration flow using **Jetpack Compose**, **CameraX**,
 1. **Step One:** Collect user data (Name, Phone, Email, Password) with validation.
 2. **Step Two:** Automatically capture a selfie when the user **smiles** or **blinks**, then save to a local database.
 
-![Screenshot_20250104_173029](https://github.com/user-attachments/assets/edbafa94-7f5e-44c9-ad09-ee76b8ed4753)
-![Screenshot_20250104_172613](https://github.com/user-attachments/assets/c58c4731-6424-40d6-a815-2df3ac5a9326)
-![Screenshot_20250104_172513](https://github.com/user-attachments/assets/297cfbb6-8344-41c0-99b3-2c8a68d302ba)
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/edbafa94-7f5e-44c9-ad09-ee76b8ed4753" width="250" alt="Screenshot Step 1"/>
+  <img src="https://github.com/user-attachments/assets/c58c4731-6424-40d6-a815-2df3ac5a9326" width="250" alt="Screenshot Step 2"/>
+  <img src="https://github.com/user-attachments/assets/297cfbb6-8344-41c0-99b3-2c8a68d302ba" width="250" alt="Screenshot User List"/>
+</div>
+
 
 This SDK demonstrates **clean architecture**, **SOLID principles**, **Hilt DI**, **Coroutines**, and **Room** while maintaining a clear separation of concerns.
 
