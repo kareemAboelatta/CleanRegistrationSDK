@@ -1,12 +1,13 @@
 package com.kareem.registrationsdk.presentation.screens.user_list.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.kareem.registrationsdk.domain.usecase.GetAllUsersUseCase
 import com.kareem.registrationsdk.presentation.core.base.BaseViewModel
 import com.kareem.registrationsdk.presentation.core.base.UiEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,8 +23,6 @@ class UsersListViewModel @Inject constructor(
     event = UsersListEvent.Idle
 ) {
 
-
-
     override fun onEvent(event: UsersListEvent) {
         when (event) {
             UsersListEvent.LoadUsers -> {
@@ -35,16 +34,9 @@ class UsersListViewModel @Inject constructor(
     }
 
     private fun loadUsers() {
-
         state = state.copy(isLoading = true)
-
-        viewModelScope.launch {
-            getAllUsersUseCase()
-                .catch { throwable ->
-                    setEffect { UsersListUiEffect.ShowError(throwable.message ?: "Unknown error") }
-                }
-                .collectLatest { userList ->
-                    Log.d("TAG", "UsersListViewModel: loadUsers: userList = $userList");
+        viewModelScope.launch (Dispatchers.IO + coroutineExceptionHandler) {
+            getAllUsersUseCase().collectLatest { userList ->
                     state = state.copy(
                         users = userList,
                         isLoading = false
@@ -52,10 +44,13 @@ class UsersListViewModel @Inject constructor(
                 }
         }
     }
-    
-    init {
-        Log.d("TAG", "UsersListViewModel: init: ");
-        onEvent(UsersListEvent.LoadUsers)
+
+    private val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        state = state.copy(isLoading = false)
+        setEffect { UsersListUiEffect.ShowError(throwable.message ?: "Unknown error") }
     }
 
+    init {
+        onEvent(UsersListEvent.LoadUsers)
+    }
 }

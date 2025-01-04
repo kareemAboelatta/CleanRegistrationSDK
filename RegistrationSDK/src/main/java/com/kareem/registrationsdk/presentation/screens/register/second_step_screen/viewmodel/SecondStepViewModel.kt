@@ -32,7 +32,7 @@ class SecondStepViewModel @Inject constructor() : BaseViewModel<SecondStepState,
                     setEffect { SecondStepUiEffect.CapturePhoto }
                 } else {
                     // You can update status message for the next step
-                    state = state.copy(statusMessage = "Detecting your smile…")
+                    state = state.copy(statusMessage = "Detecting your face…")
                 }
             }
 
@@ -43,6 +43,10 @@ class SecondStepViewModel @Inject constructor() : BaseViewModel<SecondStepState,
 
             is SecondStepEvent.OnPhotoCaptured -> {
                 setEffect { SecondStepUiEffect.PhotoCaptured(event.photoPath) }
+            }
+
+            is SecondStepEvent.OnDetectionStepTypeChanged -> {
+                state = state.copy(detectionMethodType = event.type)
             }
         }
     }

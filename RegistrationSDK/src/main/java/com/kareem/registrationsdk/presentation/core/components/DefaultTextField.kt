@@ -33,6 +33,7 @@ fun DefaultTextField(
     maxLines: Int = minLines + 1,
     shape: Shape = MaterialTheme.shapes.extraLarge,
     keyboardType: KeyboardType,
+    imeAction: ImeAction = ImeAction.Next,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     error: String? = null,
     isEnabled: Boolean = true,
@@ -60,6 +61,7 @@ fun DefaultTextField(
             shape = shape,
             value = textState ?: "",
             minLines = minLines,
+
             onValueChange = {
                 if (isLetterOnly) {
                     if (it.all { it.isLetter() })
@@ -84,7 +86,7 @@ fun DefaultTextField(
             visualTransformation = visualTransformation,
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = keyboardType,
-                imeAction = ImeAction.Done
+                imeAction = imeAction
             ),
 
             trailingIcon = {
