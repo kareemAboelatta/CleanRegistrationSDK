@@ -1,22 +1,21 @@
 package com.kareem.registrationsdk.presentation.screens.register.second_step_screen
 
 import android.Manifest
-import android.content.Context
 import android.util.Log
 import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
-import androidx.camera.core.ImageCapture
-import androidx.camera.core.ImageCaptureException
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -36,17 +35,18 @@ import com.kareem.registrationsdk.detection.FaceAnalysisProcessor
 import com.kareem.registrationsdk.detection.FaceWorkflow
 import com.kareem.registrationsdk.detection.tasks.DetectionStep
 import com.kareem.registrationsdk.detection.tasks.SmileDetectionStep
+import com.kareem.registrationsdk.presentation.core.camera_utils.capturePhoto
 import com.kareem.registrationsdk.presentation.core.navigation.LocalNavController
 import com.kareem.registrationsdk.presentation.core.navigation.Screens
 import com.kareem.registrationsdk.presentation.core.navigation.sharedViewModel
 import com.kareem.registrationsdk.presentation.screens.register.second_step_screen.viewmodel.SecondStepEvent
+import com.kareem.registrationsdk.presentation.screens.register.second_step_screen.viewmodel.SecondStepState
 import com.kareem.registrationsdk.presentation.screens.register.second_step_screen.viewmodel.SecondStepUiEffect
 import com.kareem.registrationsdk.presentation.screens.register.second_step_screen.viewmodel.SecondStepViewModel
 import com.kareem.registrationsdk.presentation.screens.register.shared_viewmodel.RegistrationUiEffect
 import com.kareem.registrationsdk.presentation.screens.register.shared_viewmodel.SharedRegistrationEvent
 import com.kareem.registrationsdk.presentation.screens.register.shared_viewmodel.SharedRegistrationViewModel
 import kotlinx.coroutines.flow.collectLatest
-import java.io.File
 
 /**
  * [SecondStepScreen]
@@ -70,7 +70,6 @@ fun SecondStepScreen(
     val cameraController = remember { LifecycleCameraController(context) }
     val previewView = remember { PreviewView(context) }
 
-    // This function can unbind or stop the camera
     fun stopCamera() {
         cameraController.unbind()
         previewView.controller = null
@@ -101,7 +100,7 @@ fun SecondStepScreen(
         viewModel.effectFlow.collectLatest { effect ->
             when (effect) {
                 is SecondStepUiEffect.CapturePhoto -> {
-                    capturePhoto(context, cameraController) { file ->
+                    cameraController.capturePhoto(context) { file ->
                         // Save file path, then trigger final user data save
                         viewModel.onEvent(SecondStepEvent.OnPhotoCaptured(file.absolutePath))
                     }
@@ -114,7 +113,7 @@ fun SecondStepScreen(
 
                 is SecondStepUiEffect.PhotoCaptured -> {
                     sharedRegistrationViewModel.onEvent(
-                        SharedRegistrationEvent.OnImageChangedChanged(effect.photoPath)
+                        SharedRegistrationEvent.OnImageChanged(effect.photoPath)
                     )
                     sharedRegistrationViewModel.onEvent(SharedRegistrationEvent.SaveUserData)
 
@@ -154,12 +153,14 @@ fun SecondStepScreen(
             }
         } else {
             // Setup the face workflow steps
-            val workflow = remember {
-                FaceWorkflow(
-                    steps = listOf(
-                        SmileDetectionStep()
+            val workflow by remember {
+                derivedStateOf {
+                    FaceWorkflow(
+                        steps = listOf(
+                            viewModel.state.detectionMethodType.detectionStep
+                        )
                     )
-                )
+                }
             }
 
             // Listen for step changes in the workflow
@@ -205,7 +206,7 @@ fun SecondStepScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Please smile to take a photo",
+                        text = viewModel.state.detectionMethodType.detectionStep.stepDescription,
                         color = Color.White,
                         style = MaterialTheme.typography.titleLarge
                     )
@@ -226,36 +227,57 @@ fun SecondStepScreen(
                         color = Color.White,
                         textAlign = TextAlign.Center
                     )
+
+                    DetectionMethod(
+                        selectedType = viewModel.state.detectionMethodType,
+                        onSelect = {
+                            viewModel.onEvent(SecondStepEvent.OnDetectionStepTypeChanged(it))
+                        }
+                    )
+
                 }
             }
         }
     }
 }
 
-/**
- * Captures a photo using the given [cameraController].
- * Writes it to a [File] in app's data directory and invokes [onSaved] callback.
- */
-private fun capturePhoto(
-    context: Context,
-    cameraController: LifecycleCameraController,
-    onSaved: (File) -> Unit
+
+@Composable
+fun DetectionMethod(
+    modifier: Modifier = Modifier,
+    selectedType: SecondStepState.DetectionStepType,
+    onSelect: (SecondStepState.DetectionStepType) -> Unit
 ) {
-    val outputFile = File(context.dataDir, "captured_${System.currentTimeMillis()}.jpg")
-    val outputOptions = ImageCapture.OutputFileOptions.Builder(outputFile).build()
+    Text(text = "Choose Detection Method", color = Color.White)
+    SecondStepState.DetectionStepType.entries.forEach { type ->
+        Row(
+            modifier = Modifier
+                .padding(5.dp)
+                .fillMaxWidth()
+                .selectable(
+                    selected = type == selectedType,
+                    onClick = {
+                        onSelect(type)
+                    }
+                ),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
 
-    cameraController.takePicture(
-        outputOptions,
-        ContextCompat.getMainExecutor(context),
-        object : ImageCapture.OnImageSavedCallback {
-            override fun onError(exception: ImageCaptureException) {
-                // Handle error logging or show a user message
-                Log.e("SecondStepScreen", "Photo capture failed", exception)
-            }
+            RadioButton(
+                colors = RadioButtonDefaults.colors(
+                    selectedColor = Color.White
+                ),
+                selected = type == selectedType,
+                onClick = {
+                    onSelect(type)
+                }
+            )
 
-            override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                onSaved(outputFile)
-            }
+            Text(
+                text = type.detectionStep.stepTitle,
+                color = Color.White,
+            )
         }
-    )
+
+    }
 }

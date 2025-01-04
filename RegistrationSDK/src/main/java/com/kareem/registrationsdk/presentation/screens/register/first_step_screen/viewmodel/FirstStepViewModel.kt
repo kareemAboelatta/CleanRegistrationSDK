@@ -59,19 +59,6 @@ class FirstStepViewModel @Inject constructor(
                 validateData()
             }
 
-            FirstStepEvent.NavigateToSecondScreen -> {
-                setEffect {
-                    FirstStepUiEffect.NavigateToSecondScreenToPickPhoto(
-                        userModel = UserModel(
-                            username = state.name,
-                            phone = state.phone,
-                            email = state.email,
-                            password = state.password,
-                            userImage = null
-                        )
-                    )
-                }
-            }
         }
 
     }
@@ -83,16 +70,10 @@ class FirstStepViewModel @Inject constructor(
         val emailResult = validateEmailUseCase.validate(state.email)
         val passwordResult = validatePasswordUseCase.validate(state.password)
 
-        val hasError = listOf(
-            nameResult,
-            phoneResult,
-            emailResult,
-            passwordResult,
-        ).any {
-            it.isSuccessful.not()
-        }
+        val validations = listOf(nameResult, phoneResult, emailResult, passwordResult)
+        val validationFailed = validations.any { !it.isSuccessful }
 
-        if (hasError) {
+        if (validationFailed) {
             state = state.copy(
                 nameError = nameResult,
                 phoneError = phoneResult,

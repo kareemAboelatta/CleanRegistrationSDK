@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -43,6 +44,7 @@ fun DefaultTextFieldPassword(
     errorText: String? = null,
     hint: String = "Password",
     textInputHint: String = "******",
+    imeAction: ImeAction = ImeAction.Done,
     textAlign: TextAlign = TextAlign.Start,
 
     shape: Shape = MaterialTheme.shapes.extraLarge,
@@ -69,7 +71,10 @@ fun DefaultTextFieldPassword(
                 .imePadding(),
             textStyle = textStyle,
             shape = shape,
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Password,
+                imeAction = imeAction
+            ),
             placeholder = {
                 Text(
                     text = " $textInputHint",

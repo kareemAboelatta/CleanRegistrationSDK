@@ -11,6 +11,5 @@ sealed class FirstStepEvent {
 
     data object Submit : FirstStepEvent()
 
-    data object NavigateToSecondScreen : FirstStepEvent()
 
 }

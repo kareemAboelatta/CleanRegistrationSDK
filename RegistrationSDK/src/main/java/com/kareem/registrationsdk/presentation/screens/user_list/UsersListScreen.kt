@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -32,59 +33,78 @@ import kotlinx.coroutines.flow.collectLatest
 fun UsersListScreen(
     viewModel: UsersListViewModel = hiltViewModel()
 ) {
-    // Collect the state from our BaseViewModel
     val state = viewModel.state
-
     val context = LocalContext.current
 
-    // Collect UI effects if needed
     LaunchedEffect(Unit) {
         viewModel.effectFlow.collectLatest { effect ->
             when (effect) {
                 is UsersListUiEffect.ShowError -> {
-                    // Show a Toast, SnackBar, or handle error
                     Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text(
-                    text = "Users",
-                    style = MaterialTheme.typography.headlineMedium
-                ) }
+                title = {
+                    Text(
+                        text = "Users",
+                        style = MaterialTheme.typography.headlineMedium
+                    )
+                }
             )
         }
-
-    ) {
-        Surface(modifier = Modifier
-            .padding(it)
-            .fillMaxSize()) {
-            if (state.isLoading) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(text = "Loading...", style = MaterialTheme.typography.bodyLarge)
+    ) { innerPadding ->
+        Surface(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
+        ) {
+            when {
+                // 1) Show loading indicator
+                state.isLoading -> {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
                 }
-            } else {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(state.users) { user ->
 
-                        UserCard(user = user)
+                // 2) Show empty list message
+                state.users.isEmpty() -> {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "No registered users yet.",
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    }
+                }
+
+                // 3) Show user list
+                else -> {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(state.users) { user ->
+                            UserCard(user = user)
+                        }
                     }
                 }
             }
         }
     }
 }
+
 
 @Composable
 fun UserCard(user: UserModel) {
@@ -98,12 +118,12 @@ fun UserCard(user: UserModel) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp),
+                .padding(10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Coil load the user's photo if available
+
             AsyncImage(
-                model = user.userImage, // the path or URL to the image
+                model = user.userImage,
                 contentDescription = "User Photo",
                 modifier = Modifier
                     .padding(8.dp)

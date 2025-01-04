@@ -48,7 +48,7 @@ class SharedRegistrationViewModel @Inject constructor(
             is SharedRegistrationEvent.OnUserModelChanged -> {
                 state = state.copy(userModel = event.userModel)
             }
-            is SharedRegistrationEvent.OnImageChangedChanged -> {
+            is SharedRegistrationEvent.OnImageChanged -> {
                 state = state.copy(
                     userModel = state.userModel?.copy(userImage = event.image)
                 )

@@ -89,8 +89,6 @@ fun FirstStepScreen(
                 viewModel.onEvent(FirstStepEvent.OnNameChanged(newValue))
             }
 
-            Spacer(modifier = Modifier.height(5.dp))
-
             // Email Field
             DefaultTextField(
                 keyboardType = androidx.compose.ui.text.input.KeyboardType.Email,
@@ -106,7 +104,6 @@ fun FirstStepScreen(
                 viewModel.onEvent(FirstStepEvent.OnEmailChanged(newValue))
             }
 
-            Spacer(modifier = Modifier.height(5.dp))
 
             // Phone Field
             DefaultTextField(
@@ -123,7 +120,6 @@ fun FirstStepScreen(
                 viewModel.onEvent(FirstStepEvent.OnPhoneChanged(newValue))
             }
 
-            Spacer(modifier = Modifier.height(5.dp))
 
             // Password Field
             DefaultTextFieldPassword(
@@ -138,7 +134,6 @@ fun FirstStepScreen(
                 viewModel.onEvent(FirstStepEvent.OnPasswordChanged(newValue))
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
 
             Button(
                 onClick = {
